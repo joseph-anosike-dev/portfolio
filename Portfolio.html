@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Your Name | Web Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F4F2EC;--ink:#1C1C1C;--red:#7B1E1E;--gold:#B8964B;--mute:#5d5a54;
+--d:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;--b:'Instrument Sans','Segoe UI',system-ui,sans-serif;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;background:var(--paper);color:var(--ink);font:400 16px/1.6 var(--b)}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.view{display:none}.view.on{display:block}
+#home.on{display:flex;min-height:100vh;min-height:100dvh}
+/* landing */
+.panel{flex:1;display:flex;flex-direction:column;justify-content:center;padding:clamp(28px,6vw,80px);transition:flex .45s ease;text-decoration:none;position:relative}
+.panel:hover,.panel:focus-visible{flex:1.35}
+.panel.l{background:var(--paper);color:var(--ink);border-right:2px solid var(--gold)}
+.panel.r{background:var(--ink);color:var(--paper)}
+.panel h2{font:700 clamp(2rem,4.4vw,3.6rem)/1.05 var(--d);margin:0 0 16px;letter-spacing:-.02em}
+.panel p{max-width:34ch;margin:0 0 28px;opacity:.85}
+.btn{display:inline-block;align-self:flex-start;background:var(--red);color:var(--paper);padding:12px 22px;border-radius:999px;font-weight:600;text-decoration:none}
+.r .btn{border-radius:2px}
+.name{position:absolute;top:clamp(20px,3vw,36px);left:clamp(28px,6vw,80px);font:700 1rem var(--d)}
+@media(max-width:760px){#home.on{flex-direction:column}.panel.l{border-right:0;border-bottom:2px solid var(--gold)}.panel:hover{flex:1}.panel{padding-top:72px}}
+/* shared inner pages */
+.bar{display:flex;justify-content:space-between;align-items:center;padding:18px clamp(20px,5vw,64px)}
+.bar a{font-weight:600;text-decoration:none}
+.bar a:hover{text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:5px}
+main{max-width:1000px;margin:0 auto;padding:24px clamp(20px,5vw,64px) 80px}
+h1{font:700 clamp(2.2rem,6vw,4rem)/1.05 var(--d);letter-spacing:-.02em;margin:24px 0 16px}
+h3{font:700 1.25rem var(--d);margin:0 0 6px}
+.lead{max-width:56ch;font-size:1.1rem;color:var(--mute)}
+/* browse */
+.grid{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));margin-top:40px}
+.card{background:#fff;border:1px solid #ddd8cc;border-radius:18px;padding:28px;display:flex;flex-direction:column;gap:10px;transition:transform .25s}
+.card:hover{transform:translateY(-4px);border-color:var(--gold)}
+.card p{margin:0;color:var(--mute)}
+.card a{color:var(--red);font-weight:600;margin-top:auto}
+/* hire */
+#hire{background:var(--paper)}
+.sec{border-top:1px solid var(--gold);padding:28px 0;display:grid;grid-template-columns:150px 1fr;gap:20px}
+.sec>h2{font:600 1rem var(--b);margin:0;color:var(--red)}
+.row{padding:14px 0;border-bottom:1px solid #ddd8cc}.row:last-child{border:0}
+.row p{margin:0;color:var(--mute)}.row .t{font-size:.9rem;color:var(--ink);margin-top:4px}
+.row a{color:var(--red);margin-right:14px;font-weight:600}
+.btn2{display:inline-block;background:var(--ink);color:var(--paper);padding:10px 18px;border-radius:2px;text-decoration:none;font-weight:600;margin:0 10px 8px 0}
+.btn2.red{background:var(--red)}
+ul.tags{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:8px}
+ul.tags li{border:1px solid var(--ink);padding:3px 12px;border-radius:2px;font-size:.9rem}
+@media(max-width:640px){.sec{grid-template-columns:1fr;gap:8px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<section id="home" class="view on">
+  <a class="panel l" href="#browse">
+    <span class="name">Your Name</span>
+    <h2>Just looking around?</h2>
+    <p>Come see my front-end work. Click through the demos and get a feel for what I build.</p>
+    <span class="btn">Explore the demos</span>
+  </a>
+  <a class="panel r" href="#hire">
+    <h2>Hiring?</h2>
+    <p>Skills, projects and code in one structured page, with my GitHub and CV.</p>
+    <span class="btn">View recruiter profile</span>
+  </a>
+</section>
+
+<section id="browse" class="view">
+  <div class="bar"><a href="#home">&larr; Back</a><a href="#hire">Recruiter view</a></div>
+  <main>
+    <h1>Hi, I'm Your Name. I build websites people enjoy using.</h1>
+    <p class="lead">Web developer and freelance designer based in Nigeria. Here are a few things I've made. Open any of them and click around.</p>
+    <div class="grid">
+      <article class="card"><h3>React Lab</h3><p>A 20-lesson React course with a live code runner, result tab and console.</p><a href="#">Open demo</a></article>
+      <article class="card"><h3>Melody to Chords</h3><p>Hum or upload a melody and get chord suggestions for your song.</p><a href="#">Open demo</a></article>
+      <article class="card"><h3>Power Cost Tool</h3><p>Compare diesel against grid electricity costs for a Nigerian facility.</p><a href="#">Open demo</a></article>
+      <article class="card"><h3>Property Lead Engine</h3><p>A lead-qualification app for Nigerian real estate agents.</p><a href="#">Open demo</a></article>
+    </div>
+  </main>
+</section>
+
+<section id="hire" class="view">
+  <div class="bar"><a href="#home">&larr; Back</a><a href="#browse">Demo view</a></div>
+  <main>
+    <h1>Your Name</h1>
+    <p class="lead">Front-end web developer and freelance designer. Lagos, Nigeria. Available for freelance and full-time roles.</p>
+    <p><a class="btn2 red" href="https://github.com/your-username">GitHub</a><a class="btn2" href="#">Download CV</a><a class="btn2" href="mailto:you@example.com">Email</a></p>
+
+    <div class="sec"><h2>Stack</h2>
+      <ul class="tags"><li>JavaScript (ES6+)</li><li>React</li><li>Next.js</li><li>HTML / CSS</li><li>Supabase</li><li>Vercel</li></ul></div>
+
+    <div class="sec"><h2>Projects</h2><div>
+      <div class="row"><h3>React Lab</h3><p>Interactive 20-lesson React course with an in-browser code runner.</p><p class="t">HTML, CSS, vanilla JS</p><a href="#">Live</a><a href="#">Code</a></div>
+      <div class="row"><h3>Property Lead Engine</h3><p>Lead qualification app for real estate agencies.</p><p class="t">Next.js, Supabase, Vercel</p><a href="#">Live</a><a href="#">Code</a></div>
+      <div class="row"><h3>Power Cost Tool</h3><p>Diesel versus grid cost assessment for commercial and industrial sites.</p><p class="t">JavaScript, energy-sector domain knowledge</p><a href="#">Live</a><a href="#">Code</a></div>
+      <div class="row"><h3>Melody to Chords</h3><p>Turns recorded or uploaded melodies into chord suggestions.</p><p class="t">HTML, CSS, vanilla JS</p><a href="#">Live</a><a href="#">Code</a></div>
+    </div></div>
+
+    <div class="sec"><h2>Services</h2><div class="row"><p>Business websites and landing pages for Nigerian SMEs, lead-generation tools and interactive web apps.</p></div></div>
+  </main>
+</section>
+
+<script>
+const ids=['home','browse','hire'];
+function route(){const h=(location.hash||'#home').slice(1);const id=ids.includes(h)?h:'home';
+ids.forEach(i=>document.getElementById(i).classList.toggle('on',i===id));window.scrollTo(0,0);
+document.title=id==='hire'?'Your Name | Recruiter profile':'Your Name | Web Developer'}
+addEventListener('hashchange',route);route();
+</script>
+</body>
+</html>
