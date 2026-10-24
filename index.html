@@ -1,0 +1,1669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title>Your Name — Frontend Developer</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Bricolage Grotesque', 'sans-serif'],
+            sans: ['Instrument Sans', 'sans-serif'],
+          },
+
+          colors: {
+            paper: '#F5F3EE',
+            ink: '#171717',
+            wine: '#741F1F',
+            gold: '#B8944B',
+            muted: '#68655F',
+          },
+
+          letterSpacing: {
+            tighter2: '-0.06em',
+          },
+
+          boxShadow: {
+            soft: '0 20px 60px rgba(0,0,0,.08)',
+            card: '0 12px 40px rgba(0,0,0,.06)',
+          },
+
+          animation: {
+            'fade-up': 'fadeUp .7s ease-out both',
+            'fade-in': 'fadeIn .5s ease-out both',
+            'float': 'float 5s ease-in-out infinite',
+            'pulse-soft': 'pulseSoft 3s ease-in-out infinite',
+          },
+
+          keyframes: {
+            fadeUp: {
+              '0%': {
+                opacity: '0',
+                transform: 'translateY(24px)'
+              },
+              '100%': {
+                opacity: '1',
+                transform: 'translateY(0)'
+              }
+            },
+
+            fadeIn: {
+              '0%': {
+                opacity: '0'
+              },
+              '100%': {
+                opacity: '1'
+              }
+            },
+
+            float: {
+              '0%,100%': {
+                transform: 'translateY(0)'
+              },
+              '50%': {
+                transform: 'translateY(-8px)'
+              }
+            },
+
+            pulseSoft: {
+              '0%,100%': {
+                opacity: '.35'
+              },
+              '50%': {
+                opacity: '.8'
+              }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  >
+
+  <style>
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 100px;
+    }
+
+    body {
+      font-family: 'Instrument Sans', sans-serif;
+    }
+
+    ::selection {
+      background: #741F1F;
+      color: #F5F3EE;
+    }
+
+    .noise {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .035;
+      z-index: 50;
+      background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");
+    }
+
+    .grid-bg {
+      background-image:
+        linear-gradient(rgba(23,23,23,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(23,23,23,.045) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+
+    .gradient-text {
+      background: linear-gradient(
+        120deg,
+        #171717 0%,
+        #741F1F 55%,
+        #B8944B 100%
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .glass {
+      background: rgba(245,243,238,.78);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .view {
+      display: none;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    #home.active {
+      display: flex;
+    }
+
+    .panel {
+      transition:
+        flex .6s cubic-bezier(.22,1,.36,1),
+        background .4s ease,
+        transform .4s ease;
+    }
+
+    .panel:hover {
+      flex: 1.25;
+    }
+
+    .panel-content {
+      transition:
+        transform .6s cubic-bezier(.22,1,.36,1),
+        opacity .4s ease;
+    }
+
+    .panel:hover .panel-content {
+      transform: translateY(-8px);
+    }
+
+    .project-card {
+      transition:
+        transform .4s cubic-bezier(.22,1,.36,1),
+        box-shadow .4s ease,
+        border-color .4s ease;
+    }
+
+    .project-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 30px 80px rgba(0,0,0,.10);
+    }
+
+    .arrow {
+      transition: transform .3s ease;
+    }
+
+    a:hover .arrow {
+      transform: translateX(5px);
+    }
+
+    @media (max-width: 768px) {
+      .panel:hover {
+        flex: 1;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-paper text-ink antialiased">
+
+  <div class="noise"></div>
+
+  <!-- ========================================================= -->
+  <!-- HOME -->
+  <!-- ========================================================= -->
+
+  <section
+    id="home"
+    class="view active min-h-[100dvh] relative overflow-hidden"
+  >
+
+    <!-- Background -->
+    <div class="absolute inset-0 grid-bg opacity-50"></div>
+
+    <div class="absolute -top-32 -left-32 w-96 h-96 bg-gold/10 blur-3xl rounded-full"></div>
+    <div class="absolute -bottom-40 right-0 w-[32rem] h-[32rem] bg-wine/10 blur-3xl rounded-full"></div>
+
+    <!-- Brand -->
+    <div class="absolute z-20 top-6 md:top-8 left-6 md:left-10">
+
+      <a
+        href="#home"
+        class="group flex items-center gap-3"
+      >
+
+        <span
+          class="w-9 h-9 rounded-full bg-ink text-paper grid place-items-center font-display font-bold text-sm"
+        >
+          Y
+        </span>
+
+        <span class="font-display font-semibold tracking-tight">
+          Your Name
+        </span>
+
+      </a>
+
+    </div>
+
+
+    <!-- Availability -->
+    <div class="absolute z-20 top-6 md:top-8 right-6 md:right-10">
+
+      <div
+        class="hidden sm:flex items-center gap-2 rounded-full border border-ink/10 bg-white/50 backdrop-blur-md px-4 py-2 text-xs font-medium"
+      >
+
+        <span class="relative flex h-2 w-2">
+          <span class="absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-60 animate-ping"></span>
+          <span class="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
+        </span>
+
+        Available for work
+
+      </div>
+
+    </div>
+
+
+    <!-- Split -->
+    <div class="relative z-10 flex flex-col md:flex-row min-h-[100dvh] w-full">
+
+      <!-- ===================================================== -->
+      <!-- VISITOR -->
+      <!-- ===================================================== -->
+
+      <a
+        href="#browse"
+        class="panel group relative flex-1 flex items-center px-7 sm:px-12 lg:px-20 py-32 md:py-20 border-b md:border-b-0 md:border-r border-ink/10 overflow-hidden"
+      >
+
+        <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+
+          <div class="absolute w-[30rem] h-[30rem] -left-40 top-1/2 -translate-y-1/2 rounded-full bg-gold/10 blur-3xl"></div>
+
+        </div>
+
+
+        <div class="panel-content relative max-w-xl">
+
+          <div class="flex items-center gap-3 mb-8">
+
+            <span class="text-xs uppercase tracking-[.25em] text-muted">
+              01 / Explore
+            </span>
+
+            <span class="h-px w-12 bg-gold"></span>
+
+          </div>
+
+
+          <h1
+            class="font-display font-semibold text-[clamp(3.4rem,7vw,7.5rem)] leading-[.88] tracking-tighter2 mb-8"
+          >
+            Just
+            <span class="gradient-text">
+              looking
+            </span>
+            around?
+          </h1>
+
+
+          <p class="text-lg md:text-xl leading-relaxed text-muted max-w-lg mb-10">
+            Explore the things I build — interactive experiments,
+            useful products, interfaces and ideas brought to life
+            through code.
+          </p>
+
+
+          <div class="inline-flex items-center gap-4 rounded-full bg-ink text-paper px-6 py-4 font-medium group-hover:bg-wine transition-colors duration-300">
+
+            <span>
+              Explore the work
+            </span>
+
+            <span class="arrow text-xl">
+              →
+            </span>
+
+          </div>
+
+
+          <div class="mt-12 flex items-center gap-5 text-xs uppercase tracking-[.2em] text-muted">
+
+            <span>React</span>
+            <span class="w-1 h-1 bg-gold rounded-full"></span>
+            <span>Next.js</span>
+            <span class="w-1 h-1 bg-gold rounded-full"></span>
+            <span>Product</span>
+
+          </div>
+
+        </div>
+
+      </a>
+
+
+      <!-- ===================================================== -->
+      <!-- RECRUITER -->
+      <!-- ===================================================== -->
+
+      <a
+        href="#hire"
+        class="panel group relative flex-1 flex items-center px-7 sm:px-12 lg:px-20 py-32 md:py-20 bg-ink text-paper overflow-hidden"
+      >
+
+        <div class="absolute inset-0">
+
+          <div
+            class="absolute w-[35rem] h-[35rem] rounded-full bg-wine/30 blur-3xl -right-48 top-1/2 -translate-y-1/2"
+          ></div>
+
+          <div
+            class="absolute w-72 h-72 rounded-full border border-gold/20 right-20 top-1/2 -translate-y-1/2 animate-pulse-soft"
+          ></div>
+
+          <div
+            class="absolute w-96 h-96 rounded-full border border-white/5 right-8 top-1/2 -translate-y-1/2"
+          ></div>
+
+        </div>
+
+
+        <div class="panel-content relative max-w-xl">
+
+          <div class="flex items-center gap-3 mb-8">
+
+            <span class="text-xs uppercase tracking-[.25em] text-white/50">
+              02 / Recruit
+            </span>
+
+            <span class="h-px w-12 bg-gold"></span>
+
+          </div>
+
+
+          <h2
+            class="font-display font-semibold text-[clamp(3.4rem,7vw,7.5rem)] leading-[.88] tracking-tighter2 mb-8"
+          >
+            Looking
+            <span class="text-gold">
+              to hire?
+            </span>
+          </h2>
+
+
+          <p class="text-lg md:text-xl leading-relaxed text-white/60 max-w-lg mb-10">
+            See my technical stack, selected projects, experience,
+            services and the kind of problems I can help you solve.
+          </p>
+
+
+          <div class="inline-flex items-center gap-4 rounded-full bg-paper text-ink px-6 py-4 font-medium group-hover:bg-gold transition-colors duration-300">
+
+            <span>
+              View recruiter profile
+            </span>
+
+            <span class="arrow text-xl">
+              →
+            </span>
+
+          </div>
+
+
+          <div class="mt-12 flex items-center gap-5 text-xs uppercase tracking-[.2em] text-white/40">
+
+            <span>Frontend</span>
+            <span class="w-1 h-1 bg-gold rounded-full"></span>
+            <span>Freelance</span>
+            <span class="w-1 h-1 bg-gold rounded-full"></span>
+            <span>Nigeria</span>
+
+          </div>
+
+        </div>
+
+      </a>
+
+    </div>
+
+  </section>
+
+
+  <!-- ========================================================= -->
+  <!-- BROWSE -->
+  <!-- ========================================================= -->
+
+  <section id="browse" class="view min-h-screen bg-paper">
+
+    <!-- Navigation -->
+
+    <header
+      class="sticky top-0 z-40 glass border-b border-ink/10"
+    >
+
+      <div
+        class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 h-20 flex items-center justify-between"
+      >
+
+        <a
+          href="#home"
+          class="flex items-center gap-3 font-display font-semibold"
+        >
+
+          <span class="w-8 h-8 rounded-full bg-ink text-paper grid place-items-center text-xs">
+            Y
+          </span>
+
+          Your Name
+
+        </a>
+
+
+        <nav class="hidden md:flex items-center gap-8 text-sm">
+
+          <a
+            href="#browse"
+            class="text-wine font-semibold"
+          >
+            Work
+          </a>
+
+          <a
+            href="#hire"
+            class="text-muted hover:text-ink transition-colors"
+          >
+            Recruiter profile
+          </a>
+
+        </nav>
+
+
+        <a
+          href="#home"
+          class="text-sm font-medium hover:text-wine transition-colors"
+        >
+          ← Home
+        </a>
+
+      </div>
+
+    </header>
+
+
+    <main class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-20 md:py-32">
+
+      <!-- Intro -->
+
+      <div class="grid lg:grid-cols-[1fr_420px] gap-12 lg:gap-24 items-end mb-20">
+
+        <div>
+
+          <div class="flex items-center gap-3 mb-7">
+
+            <span class="text-xs uppercase tracking-[.25em] text-wine">
+              Selected work
+            </span>
+
+            <span class="h-px w-12 bg-gold"></span>
+
+          </div>
+
+
+          <h1
+            class="font-display font-semibold text-[clamp(3.5rem,7vw,7rem)] leading-[.88] tracking-tighter2"
+          >
+            Things I've
+            <span class="gradient-text">
+              built.
+            </span>
+          </h1>
+
+        </div>
+
+
+        <div>
+
+          <p class="text-lg text-muted leading-relaxed">
+            A collection of experiments, tools and products
+            designed around real problems rather than simply
+            looking good in a portfolio.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- Stats -->
+
+      <div
+        class="grid grid-cols-2 md:grid-cols-4 border-y border-ink/10 mb-20"
+      >
+
+        <div class="py-7 border-r border-ink/10">
+          <p class="font-display text-3xl font-semibold">04+</p>
+          <p class="text-xs uppercase tracking-widest text-muted mt-1">
+            Featured projects
+          </p>
+        </div>
+
+        <div class="py-7 md:pl-8 md:border-r border-ink/10">
+          <p class="font-display text-3xl font-semibold">3+</p>
+          <p class="text-xs uppercase tracking-widest text-muted mt-1">
+            Core technologies
+          </p>
+        </div>
+
+        <div class="py-7 md:pl-8 border-r border-ink/10">
+          <p class="font-display text-3xl font-semibold">∞</p>
+          <p class="text-xs uppercase tracking-widest text-muted mt-1">
+            Ideas
+          </p>
+        </div>
+
+        <div class="py-7 md:pl-8">
+          <p class="font-display text-3xl font-semibold">NG</p>
+          <p class="text-xs uppercase tracking-widest text-muted mt-1">
+            Based in Nigeria
+          </p>
+        </div>
+
+      </div>
+
+
+      <!-- Projects -->
+
+      <div class="grid md:grid-cols-2 gap-6 lg:gap-8">
+
+
+        <!-- Project 1 -->
+
+        <article
+          class="project-card group bg-white border border-ink/10 rounded-[2rem] overflow-hidden"
+        >
+
+          <div
+            class="h-72 bg-ink relative overflow-hidden p-8 flex items-end"
+          >
+
+            <div class="absolute inset-0 grid-bg opacity-20"></div>
+
+            <div class="absolute right-10 top-10 w-32 h-32 rounded-full border border-gold/40"></div>
+
+            <div class="absolute right-20 top-20 w-16 h-16 rounded-full bg-wine blur-xl"></div>
+
+            <span
+              class="relative z-10 text-white/50 text-xs uppercase tracking-[.25em]"
+            >
+              Interactive education
+            </span>
+
+          </div>
+
+
+          <div class="p-7 md:p-9">
+
+            <div class="flex justify-between gap-6 mb-4">
+
+              <h2 class="font-display text-2xl font-semibold">
+                React Lab
+              </h2>
+
+              <span class="text-muted text-sm">
+                01
+              </span>
+
+            </div>
+
+
+            <p class="text-muted leading-relaxed mb-7">
+              An interactive 20-lesson React course with a live
+              code runner, result preview and console experience.
+            </p>
+
+
+            <div class="flex flex-wrap gap-2 mb-8">
+
+              <span class="px-3 py-1 rounded-full bg-paper text-xs">
+                React
+              </span>
+
+              <span class="px-3 py-1 rounded-full bg-paper text-xs">
+                JavaScript
+              </span>
+
+              <span class="px-3 py-1 rounded-full bg-paper text-xs">
+                CSS
+              </span>
+
+            </div>
+
+
+            <a
+              href="#"
+              class="inline-flex items-center gap-3 font-semibold text-wine"
+            >
+              Open project
+              <span class="arrow">→</span>
+            </a>
+
+          </div>
+
+        </article>
+
+
+        <!-- Project 2 -->
+
+        <article
+          class="project-card group bg-white border border-ink/10 rounded-[2rem] overflow-hidden"
+        >
+
+          <div
+            class="h-72 bg-[#E8E4DA] relative overflow-hidden p-8 flex items-end"
+          >
+
+            <div class="absolute inset-0">
+
+              <div class="absolute w-64 h-64 rounded-full border border-wine/20 -right-20 -top-20"></div>
+
+              <div class="absolute w-40 h-40 rounded-full bg-gold/20 blur-2xl left-10 top-10"></div>
+
+            </div>
+
+            <span
+              class="relative z-10 text-ink/50 text-xs uppercase tracking-[.25em]"
+            >
+              Music technology
+            </span>
+
+          </div>
+
+
+          <div class="p-7 md:p-9">
+
+            <div class="flex justify-between gap-6 mb-4">
+
+              <h2 class="font-display text-2xl font-semibold">
+                Melody to Chords
+              </h2>
+
+              <span class="text-muted text-sm">
+                02
+              </span>
+
+            </div>
+
+
+            <p class="text-muted leading-relaxed mb-7">
+              A music tool that takes recorded or uploaded melodies
+              and generates useful chord suggestions for songwriting.
+            </p>
+
+
+            <div class="flex flex-wrap gap-2 mb-8">
+
+              <span class="px-3 py-1 rounded-full bg-paper text-xs">
+                Audio
+              </span>
+
+              <span class="px-3 py-1 rounded-full bg-paper text-xs">
+                JavaScript
+              </span>
+
+              <span class="px-3 py-1 rounded-full bg-paper text-xs">
+                Web API
+              </span>
+
+            </div>
+
+
+            <a
+              href="#"
+              class="inline-flex items-center gap-3 font-semibold text-wine"
+            >
+              Open project
+              <span class="arrow">→</span>
+            </a>
+
+          </div>
+
+        </article>
+
+
+        <!-- Project 3 -->
+
+        <article
+          class="project-card group bg-white border border-ink/10 rounded-[2rem] overflow-hidden"
+        >
+
+          <div
+            class="h-72 bg-wine relative overflow-hidden p-8 flex items-end"
+          >
+
+            <div class="absolute inset-0">
+
+              <div class="absolute w-80 h-80 rounded-full border border-gold/30 -right-32 -bottom-32"></div>
+
+              <div class="absolute w-44 h-44 rounded-full border border-white/10 right-16 bottom-16"></div>
+
+            </div>
+
+            <span
+              class="relative z-10 text-white/50 text-xs uppercase tracking-[.25em]"
+            >
+              Energy analytics
+            </span>
+
+          </div>
+
+
+          <div class="p-7 md:p-9">
+
+            <div class="flex justify-between gap-6 mb-4">
+
+              <h2 class="font-display text-2xl font-semibold">
+                Power Cost Tool
+              </h2>
+
+              <span class="text-muted text-sm">
+                03
+              </span>
+
+            </div>
+
+
+            <p class="text-muted leading-relaxed mb-7">
+              A practical comparison tool for evaluating diesel
+              generation against grid electricity costs for
+              Nigerian commercial facilities.
+            </p>
+
+
+            <div class="flex flex-wrap gap-2 mb-8">
+
+              <span class="px-3 py-1 rounded-full bg-paper text-xs">
+                Energy
+              </span>
+
+              <span class="px-3 py-1 rounded-full bg-paper text-xs">
+                Analytics
+              </span>
+
+              <span class="px-3 py-1 rounded-full bg-paper text-xs">
+                JavaScript
+              </span>
+
+            </div>
+
+
+            <a
+              href="#"
+              class="inline-flex items-center gap-3 font-semibold text-wine"
+            >
+              Open project
+              <span class="arrow">→</span>
+            </a>
+
+          </div>
+
+        </article>
+
+
+        <!-- Project 4 -->
+
+        <article
+          class="project-card group bg-white border border-ink/10 rounded-[2rem] overflow-hidden"
+        >
+
+          <div
+            class="h-72 bg-[#171717] relative overflow-hidden p-8 flex items-end"
+          >
+
+            <div class="absolute inset-0">
+
+              <div class="absolute w-64 h-64 bg-gold/10 blur-3xl rounded-full left-1/4 top-1/4"></div>
+
+              <div class="absolute w-48 h-48 border border-white/10 rounded-full right-10 top-10"></div>
+
+            </div>
+
+            <span
+              class="relative z-10 text-white/50 text-xs uppercase tracking-[.25em]"
+            >
+              Real estate technology
+            </span>
+
+          </div>
+
+
+          <div class="p-7 md:p-9">
+
+            <div class="flex justify-between gap-6 mb-4">
+
+              <h2 class="font-display text-2xl font-semibold">
+                Property Lead Engine
+              </h2>
+
+              <span class="text-muted text-sm">
+                04
+              </span>
+
+            </div>
+
+
+            <p class="text-muted leading-relaxed mb-7">
+              A lead-qualification platform designed to help
+              Nigerian real estate teams capture, score and
+              manage prospective buyers.
+            </p>
+
+
+            <div class="flex flex-wrap gap-2 mb-8">
+
+              <span class="px-3 py-1 rounded-full bg-paper text-xs">
+                Next.js
+              </span>
+
+              <span class="px-3 py-1 rounded-full bg-paper text-xs">
+                Supabase
+              </span>
+
+              <span class="px-3 py-1 rounded-full bg-paper text-xs">
+                Vercel
+              </span>
+
+            </div>
+
+
+            <a
+              href="#"
+              class="inline-flex items-center gap-3 font-semibold text-wine"
+            >
+              Open project
+              <span class="arrow">→</span>
+            </a>
+
+          </div>
+
+        </article>
+
+      </div>
+
+
+      <!-- Bottom CTA -->
+
+      <div
+        class="mt-24 rounded-[2rem] bg-ink text-paper p-8 md:p-14 relative overflow-hidden"
+      >
+
+        <div
+          class="absolute w-96 h-96 bg-wine/40 rounded-full blur-3xl -right-32 -top-32"
+        ></div>
+
+        <div class="relative z-10 max-w-2xl">
+
+          <p class="text-xs uppercase tracking-[.25em] text-white/40 mb-5">
+            Want the technical version?
+          </p>
+
+          <h2
+            class="font-display text-4xl md:text-6xl leading-none tracking-tight mb-6"
+          >
+            See how I think,
+            <span class="text-gold">
+              not just what I make.
+            </span>
+          </h2>
+
+          <a
+            href="#hire"
+            class="inline-flex items-center gap-3 bg-paper text-ink px-6 py-4 rounded-full font-semibold hover:bg-gold transition-colors"
+          >
+            Open recruiter profile
+            <span>→</span>
+          </a>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </section>
+
+
+  <!-- ========================================================= -->
+  <!-- HIRE -->
+  <!-- ========================================================= -->
+
+  <section id="hire" class="view min-h-screen bg-paper">
+
+    <!-- Header -->
+
+    <header
+      class="sticky top-0 z-40 glass border-b border-ink/10"
+    >
+
+      <div
+        class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 h-20 flex items-center justify-between"
+      >
+
+        <a
+          href="#home"
+          class="flex items-center gap-3 font-display font-semibold"
+        >
+
+          <span class="w-8 h-8 rounded-full bg-ink text-paper grid place-items-center text-xs">
+            Y
+          </span>
+
+          Your Name
+
+        </a>
+
+
+        <nav class="hidden md:flex items-center gap-8 text-sm">
+
+          <a
+            href="#browse"
+            class="text-muted hover:text-ink transition-colors"
+          >
+            Work
+          </a>
+
+          <a
+            href="#hire"
+            class="text-wine font-semibold"
+          >
+            Recruiter profile
+          </a>
+
+        </nav>
+
+
+        <a
+          href="#home"
+          class="text-sm font-medium hover:text-wine transition-colors"
+        >
+          ← Home
+        </a>
+
+      </div>
+
+    </header>
+
+
+    <main class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-20 md:py-28">
+
+
+      <!-- Hero -->
+
+      <section class="grid lg:grid-cols-[1.1fr_.9fr] gap-16 items-end mb-24">
+
+        <div>
+
+          <div class="flex items-center gap-3 mb-7">
+
+            <span class="text-xs uppercase tracking-[.25em] text-wine">
+              Recruiter profile
+            </span>
+
+            <span class="h-px w-12 bg-gold"></span>
+
+          </div>
+
+
+          <h1
+            class="font-display font-semibold text-[clamp(4rem,8vw,8rem)] leading-[.82] tracking-tighter2 mb-10"
+          >
+            Your
+            <br>
+            <span class="gradient-text">
+              Name.
+            </span>
+          </h1>
+
+
+          <p class="text-xl md:text-2xl text-muted max-w-2xl leading-relaxed">
+            Front-end developer and product-minded designer
+            building digital experiences that are useful,
+            fast and deliberately designed.
+          </p>
+
+        </div>
+
+
+        <div>
+
+          <div class="bg-white border border-ink/10 rounded-[2rem] p-7">
+
+            <div class="flex items-center gap-3 mb-6">
+
+              <span class="relative flex h-3 w-3">
+
+                <span class="absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-60 animate-ping"></span>
+
+                <span class="relative inline-flex h-3 w-3 rounded-full bg-green-500"></span>
+
+              </span>
+
+              <span class="font-medium">
+                Available for selected opportunities
+              </span>
+
+            </div>
+
+
+            <p class="text-muted leading-relaxed mb-7">
+              Currently open to freelance projects,
+              product collaborations and strong full-time
+              opportunities.
+            </p>
+
+
+            <div class="flex flex-wrap gap-3">
+
+              <a
+                href="https://github.com/your-username"
+                class="bg-ink text-paper px-5 py-3 rounded-full text-sm font-semibold hover:bg-wine transition-colors"
+              >
+                GitHub
+              </a>
+
+              <a
+                href="#"
+                class="border border-ink/15 px-5 py-3 rounded-full text-sm font-semibold hover:border-gold transition-colors"
+              >
+                Download CV
+              </a>
+
+              <a
+                href="mailto:you@example.com"
+                class="border border-ink/15 px-5 py-3 rounded-full text-sm font-semibold hover:border-gold transition-colors"
+              >
+                Email me
+              </a>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- Stack -->
+
+      <section class="border-t border-ink/10 py-12">
+
+        <div class="grid md:grid-cols-[180px_1fr] gap-8">
+
+          <div>
+
+            <p class="text-xs uppercase tracking-[.25em] text-wine font-semibold">
+              Stack
+            </p>
+
+          </div>
+
+
+          <div>
+
+            <div class="flex flex-wrap gap-3">
+
+              <span class="px-4 py-2 rounded-full bg-ink text-paper text-sm">
+                JavaScript
+              </span>
+
+              <span class="px-4 py-2 rounded-full bg-white border border-ink/10 text-sm">
+                React
+              </span>
+
+              <span class="px-4 py-2 rounded-full bg-white border border-ink/10 text-sm">
+                Next.js
+              </span>
+
+              <span class="px-4 py-2 rounded-full bg-white border border-ink/10 text-sm">
+                HTML / CSS
+              </span>
+
+              <span class="px-4 py-2 rounded-full bg-white border border-ink/10 text-sm">
+                Tailwind CSS
+              </span>
+
+              <span class="px-4 py-2 rounded-full bg-white border border-ink/10 text-sm">
+                Supabase
+              </span>
+
+              <span class="px-4 py-2 rounded-full bg-white border border-ink/10 text-sm">
+                Vercel
+              </span>
+
+              <span class="px-4 py-2 rounded-full bg-white border border-ink/10 text-sm">
+                Git
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- Projects -->
+
+      <section class="border-t border-ink/10 py-12">
+
+        <div class="grid md:grid-cols-[180px_1fr] gap-8">
+
+          <div>
+
+            <p class="text-xs uppercase tracking-[.25em] text-wine font-semibold">
+              Projects
+            </p>
+
+          </div>
+
+
+          <div>
+
+            <!-- Row -->
+
+            <article class="group py-8 border-b border-ink/10 first:pt-0">
+
+              <div class="grid md:grid-cols-[1fr_auto] gap-5">
+
+                <div>
+
+                  <div class="flex items-center gap-3 mb-3">
+
+                    <h3 class="font-display text-2xl font-semibold">
+                      React Lab
+                    </h3>
+
+                    <span class="text-xs text-muted">
+                      01
+                    </span>
+
+                  </div>
+
+                  <p class="text-muted max-w-2xl leading-relaxed">
+                    Interactive 20-lesson React learning environment
+                    featuring browser-based execution and live feedback.
+                  </p>
+
+                  <p class="text-xs uppercase tracking-widest text-muted/70 mt-4">
+                    React · JavaScript · CSS
+                  </p>
+
+                </div>
+
+
+                <div class="flex items-start gap-4">
+
+                  <a
+                    href="#"
+                    class="text-sm font-semibold text-wine"
+                  >
+                    Live ↗
+                  </a>
+
+                  <a
+                    href="#"
+                    class="text-sm font-semibold"
+                  >
+                    Code ↗
+                  </a>
+
+                </div>
+
+              </div>
+
+            </article>
+
+
+            <!-- Row -->
+
+            <article class="group py-8 border-b border-ink/10">
+
+              <div class="grid md:grid-cols-[1fr_auto] gap-5">
+
+                <div>
+
+                  <div class="flex items-center gap-3 mb-3">
+
+                    <h3 class="font-display text-2xl font-semibold">
+                      Property Lead Engine
+                    </h3>
+
+                    <span class="text-xs text-muted">
+                      02
+                    </span>
+
+                  </div>
+
+                  <p class="text-muted max-w-2xl leading-relaxed">
+                    Lead qualification and management platform
+                    designed specifically around Nigerian real estate
+                    workflows.
+                  </p>
+
+                  <p class="text-xs uppercase tracking-widest text-muted/70 mt-4">
+                    Next.js · Supabase · Vercel
+                  </p>
+
+                </div>
+
+
+                <div class="flex items-start gap-4">
+
+                  <a
+                    href="#"
+                    class="text-sm font-semibold text-wine"
+                  >
+                    Live ↗
+                  </a>
+
+                  <a
+                    href="#"
+                    class="text-sm font-semibold"
+                  >
+                    Code ↗
+                  </a>
+
+                </div>
+
+              </div>
+
+            </article>
+
+
+            <!-- Row -->
+
+            <article class="group py-8 border-b border-ink/10">
+
+              <div class="grid md:grid-cols-[1fr_auto] gap-5">
+
+                <div>
+
+                  <div class="flex items-center gap-3 mb-3">
+
+                    <h3 class="font-display text-2xl font-semibold">
+                      Power Cost Tool
+                    </h3>
+
+                    <span class="text-xs text-muted">
+                      03
+                    </span>
+
+                  </div>
+
+                  <p class="text-muted max-w-2xl leading-relaxed">
+                    Energy cost analysis application comparing
+                    diesel generation against grid electricity for
+                    Nigerian facilities.
+                  </p>
+
+                  <p class="text-xs uppercase tracking-widest text-muted/70 mt-4">
+                    JavaScript · Analytics · Energy
+                  </p>
+
+                </div>
+
+
+                <div class="flex items-start gap-4">
+
+                  <a
+                    href="#"
+                    class="text-sm font-semibold text-wine"
+                  >
+                    Live ↗
+                  </a>
+
+                  <a
+                    href="#"
+                    class="text-sm font-semibold"
+                  >
+                    Code ↗
+                  </a>
+
+                </div>
+
+              </div>
+
+            </article>
+
+
+            <!-- Row -->
+
+            <article class="group py-8">
+
+              <div class="grid md:grid-cols-[1fr_auto] gap-5">
+
+                <div>
+
+                  <div class="flex items-center gap-3 mb-3">
+
+                    <h3 class="font-display text-2xl font-semibold">
+                      Melody to Chords
+                    </h3>
+
+                    <span class="text-xs text-muted">
+                      04
+                    </span>
+
+                  </div>
+
+                  <p class="text-muted max-w-2xl leading-relaxed">
+                    Music technology experiment translating recorded
+                    melodies into useful chord suggestions for
+                    songwriting.
+                  </p>
+
+                  <p class="text-xs uppercase tracking-widest text-muted/70 mt-4">
+                    JavaScript · Audio · Web APIs
+                  </p>
+
+                </div>
+
+
+                <div class="flex items-start gap-4">
+
+                  <a
+                    href="#"
+                    class="text-sm font-semibold text-wine"
+                  >
+                    Live ↗
+                  </a>
+
+                  <a
+                    href="#"
+                    class="text-sm font-semibold"
+                  >
+                    Code ↗
+                  </a>
+
+                </div>
+
+              </div>
+
+            </article>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- Services -->
+
+      <section class="border-t border-ink/10 py-12">
+
+        <div class="grid md:grid-cols-[180px_1fr] gap-8">
+
+          <div>
+
+            <p class="text-xs uppercase tracking-[.25em] text-wine font-semibold">
+              Services
+            </p>
+
+          </div>
+
+
+          <div class="grid sm:grid-cols-2 gap-4">
+
+            <div class="bg-white border border-ink/10 rounded-2xl p-6">
+
+              <span class="text-wine text-sm">
+                01
+              </span>
+
+              <h3 class="font-display text-xl font-semibold mt-4 mb-3">
+                Websites
+              </h3>
+
+              <p class="text-muted text-sm leading-relaxed">
+                High-quality websites and landing pages for
+                businesses, startups and personal brands.
+              </p>
+
+            </div>
+
+
+            <div class="bg-white border border-ink/10 rounded-2xl p-6">
+
+              <span class="text-wine text-sm">
+                02
+              </span>
+
+              <h3 class="font-display text-xl font-semibold mt-4 mb-3">
+                Web Applications
+              </h3>
+
+              <p class="text-muted text-sm leading-relaxed">
+                Functional products, dashboards, internal tools
+                and interactive experiences.
+              </p>
+
+            </div>
+
+
+            <div class="bg-white border border-ink/10 rounded-2xl p-6">
+
+              <span class="text-wine text-sm">
+                03
+              </span>
+
+              <h3 class="font-display text-xl font-semibold mt-4 mb-3">
+                Product UI
+              </h3>
+
+              <p class="text-muted text-sm leading-relaxed">
+                Clean, thoughtful interfaces designed around
+                actual user workflows and business objectives.
+              </p>
+
+            </div>
+
+
+            <div class="bg-white border border-ink/10 rounded-2xl p-6">
+
+              <span class="text-wine text-sm">
+                04
+              </span>
+
+              <h3 class="font-display text-xl font-semibold mt-4 mb-3">
+                Prototyping
+              </h3>
+
+              <p class="text-muted text-sm leading-relaxed">
+                Turn an idea into a functional prototype quickly
+                enough to test, learn and iterate.
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- CTA -->
+
+      <section class="mt-20">
+
+        <div
+          class="relative overflow-hidden rounded-[2.5rem] bg-ink text-paper p-9 md:p-16"
+        >
+
+          <div
+            class="absolute w-[30rem] h-[30rem] rounded-full bg-wine/30 blur-3xl -right-32 -top-40"
+          ></div>
+
+          <div class="relative z-10 max-w-3xl">
+
+            <p class="text-xs uppercase tracking-[.25em] text-white/40 mb-6">
+              Let's build something
+            </p>
+
+            <h2
+              class="font-display text-[clamp(3rem,6vw,6rem)] leading-[.9] tracking-tight mb-8"
+            >
+              Have a problem
+              <span class="text-gold">
+                worth solving?
+              </span>
+            </h2>
+
+
+            <div class="flex flex-wrap gap-4">
+
+              <a
+                href="mailto:you@example.com"
+                class="inline-flex items-center gap-3 bg-paper text-ink px-6 py-4 rounded-full font-semibold hover:bg-gold transition-colors"
+              >
+                Start a conversation
+                <span>→</span>
+              </a>
+
+              <a
+                href="#browse"
+                class="inline-flex items-center gap-3 border border-white/20 px-6 py-4 rounded-full font-semibold hover:bg-white/10 transition-colors"
+              >
+                View projects
+              </a>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- Footer -->
+
+      <footer class="mt-16 pt-8 border-t border-ink/10 flex flex-col md:flex-row justify-between gap-5 text-sm text-muted">
+
+        <p>
+          © 2026 Your Name. Built with intention.
+        </p>
+
+        <div class="flex gap-6">
+
+          <a href="#" class="hover:text-wine">
+            GitHub
+          </a>
+
+          <a href="#" class="hover:text-wine">
+            LinkedIn
+          </a>
+
+          <a href="mailto:you@example.com" class="hover:text-wine">
+            Email
+          </a>
+
+        </div>
+
+      </footer>
+
+    </main>
+
+  </section>
+
+
+  <!-- ========================================================= -->
+  <!-- ROUTER -->
+  <!-- ========================================================= -->
+
+  <script>
+
+    const ids = [
+      'home',
+      'browse',
+      'hire'
+    ];
+
+
+    function route() {
+
+      const hash =
+        (location.hash || '#home')
+          .slice(1);
+
+
+      const id =
+        ids.includes(hash)
+          ? hash
+          : 'home';
+
+
+      ids.forEach(section => {
+
+        const element =
+          document.getElementById(section);
+
+        element.classList.toggle(
+          'active',
+          section === id
+        );
+
+      });
+
+
+      window.scrollTo({
+        top: 0,
+        behavior: 'instant'
+      });
+
+
+      const titles = {
+
+        home:
+          'Your Name — Frontend Developer',
+
+        browse:
+          'Selected Work — Your Name',
+
+        hire:
+          'Recruiter Profile — Your Name'
+
+      };
+
+
+      document.title =
+        titles[id];
+
+    }
+
+
+    window.addEventListener(
+      'hashchange',
+      route
+    );
+
+
+    route();
+
+  </script>
+
+</body>
+</html>
